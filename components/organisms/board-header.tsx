@@ -7,6 +7,7 @@ import {
   Settings,
   Download,
   Palette,
+  Info,
 } from "lucide-react";
 import { Button } from "@/components/atoms/button";
 import { ProjectSwitcher } from "@/components/molecules/project-switcher";
@@ -19,12 +20,14 @@ interface BoardHeaderProps {
   onOpenProjectModal: () => void;
   onOpenAddColumnModal: () => void;
   onOpenAppearanceModal?: () => void;
+  onOpenAboutModal?: () => void;
 }
 
 export function BoardHeader({
   onOpenProjectModal,
   onOpenAddColumnModal,
   onOpenAppearanceModal,
+  onOpenAboutModal,
 }: BoardHeaderProps) {
   const { boards, activeBoardId, updateBoard } = useKanbanStore();
   const currentBoard = boards[activeBoardId] || Object.values(boards)[0];
@@ -130,6 +133,19 @@ export function BoardHeader({
             <Settings className="h-3.5 w-3.5" />
           </Button>
 
+          {/* About Trackly Modal Trigger */}
+          {onOpenAboutModal && (
+            <Button
+              variant="outline"
+              size="icon-sm"
+              className="h-8 w-8 text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400"
+              onClick={onOpenAboutModal}
+              title="About Trackly & Credits"
+            >
+              <Info className="h-3.5 w-3.5" />
+            </Button>
+          )}
+
           {/* Dark Mode Toggle */}
           <ThemeToggle />
         </div>
@@ -185,6 +201,19 @@ export function BoardHeader({
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
               <span>Saved locally</span>
             </span>
+
+            <div className="h-3 w-px bg-slate-200 dark:bg-slate-800 hidden sm:block" />
+
+            {/* Author Attribution */}
+            <a
+              href="https://kplevi.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[11px] text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors font-medium hidden sm:inline"
+              title="Made by kplevi.dev"
+            >
+              by <span className="underline decoration-indigo-400/50 underline-offset-2 font-semibold text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400">kplevi.dev</span>
+            </a>
           </div>
         </div>
       )}

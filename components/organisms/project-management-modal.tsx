@@ -354,6 +354,19 @@ export function ProjectManagementModal({
                 <span>Reset Sample</span>
               </Button>
             </div>
+
+            {/* Author Attribution Footer */}
+            <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80 text-center text-[11px] text-slate-400">
+              Trackly • Made with ❤️ by{" "}
+              <a
+                href="https://kplevi.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline"
+              >
+                kplevi.dev
+              </a>
+            </div>
           </div>
         ) : (
           <form onSubmit={handleCreate} className="space-y-4 pt-1">
