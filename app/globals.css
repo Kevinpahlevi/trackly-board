@@ -14,7 +14,7 @@
 }
 
 :root {
-  --background: #f8fafc;
+  --background: #f1f5f9;
   --foreground: #0f172a;
   --card: #ffffff;
   --card-foreground: #0f172a;
@@ -22,7 +22,7 @@
   --popover-foreground: #0f172a;
   --primary: #4f46e5;
   --primary-foreground: #ffffff;
-  --secondary: #f1f5f9;
+  --secondary: #e2e8f0;
   --secondary-foreground: #1e293b;
   --muted: #f1f5f9;
   --muted-foreground: #64748b;
@@ -30,14 +30,14 @@
   --accent-foreground: #0f172a;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --border: #e2e8f0;
-  --input: #e2e8f0;
+  --border: #cbd5e1;
+  --input: #cbd5e1;
   --ring: #6366f1;
   --radius: 10px;
 }
 
 .dark {
-  --background: #090d16;
+  --background: #080c14;
   --foreground: #f8fafc;
   --card: #111827;
   --card-foreground: #f8fafc;
@@ -66,21 +66,23 @@ body {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Subtle Canvas Grid Texture & Ambient Glow */
+/* Distinct Architectural Grid Texture & Ambient Illumination */
 .canvas-ambient-glow {
-  background-color: #f8fafc;
+  background-color: #f1f5f9;
   background-image: 
-    radial-gradient(700px circle at 50% 0%, rgba(99, 102, 241, 0.05), transparent 85%),
-    radial-gradient(circle, rgba(148, 163, 184, 0.22) 1px, transparent 1px);
-  background-size: 100% 100%, 24px 24px;
+    radial-gradient(at 50% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 65%),
+    linear-gradient(to right, rgba(148, 163, 184, 0.18) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.18) 1px, transparent 1px);
+  background-size: 100% 100%, 28px 28px, 28px 28px;
 }
 
 .dark .canvas-ambient-glow {
-  background-color: #090d16;
+  background-color: #080c14;
   background-image: 
-    radial-gradient(850px circle at 50% 0%, rgba(99, 102, 241, 0.08), transparent 85%),
-    radial-gradient(circle, rgba(148, 163, 184, 0.09) 1px, transparent 1px);
-  background-size: 100% 100%, 24px 24px;
+    radial-gradient(at 50% 0%, rgba(99, 102, 241, 0.18) 0px, transparent 65%),
+    linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 100% 100%, 28px 28px, 28px 28px;
 }
 
 /* Custom Sleek Scrollbar */
