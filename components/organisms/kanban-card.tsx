@@ -3,7 +3,6 @@
 import * as React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical } from "lucide-react";
 import { KanbanCardItem } from "@/types/kanban";
 import { CardTagBadge } from "@/components/molecules/card-tag-badge";
 import { CardPriorityBadge } from "@/components/molecules/card-priority-badge";
@@ -48,7 +47,7 @@ export function KanbanCard({ card, isOverlay = false }: KanbanCardProps) {
   };
 
   const handleClick = () => {
-    // If the click was not on the drag handle, open modal
+    // If not dragging, open modal
     if (isOverlay || isDragging) return;
     setEditingCardId(card.id);
   };
@@ -57,10 +56,12 @@ export function KanbanCard({ card, isOverlay = false }: KanbanCardProps) {
     <div
       ref={setNodeRef}
       style={style}
+      {...attributes}
+      {...listeners}
       onClick={handleClick}
       className={cn(
-        "group relative flex flex-col gap-2 rounded-[10px] border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 p-3 shadow-xs hover:border-indigo-300 dark:hover:border-indigo-600/60 hover:shadow-md transition-all cursor-pointer select-none overflow-hidden",
-        isDragging && "opacity-30 border-dashed border-indigo-400 bg-indigo-50/20",
+        "group relative flex flex-col gap-2 rounded-[10px] border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 p-3 shadow-xs hover:border-indigo-300 dark:hover:border-indigo-600/60 hover:shadow-md transition-all cursor-grab active:cursor-grabbing select-none overflow-hidden",
+        isDragging && "opacity-30 border-dashed border-indigo-400 bg-indigo-50/20 cursor-grabbing",
         isOverlay &&
           "shadow-2xl border-indigo-500 ring-2 ring-indigo-500/20 rotate-1 scale-[1.02] cursor-grabbing bg-white dark:bg-slate-900 z-50 rounded-[10px]"
       )}
@@ -73,7 +74,7 @@ export function KanbanCard({ card, isOverlay = false }: KanbanCardProps) {
         />
       )}
 
-      {/* Top Bar: Drag Handle + Tags + Priority */}
+      {/* Top Bar: Tags + Priority */}
       <div className="flex items-center justify-between gap-1.5">
         <div className="flex flex-wrap items-center gap-1 overflow-hidden">
           {card.tags.slice(0, 3).map((tag) => (
@@ -86,18 +87,8 @@ export function KanbanCard({ card, isOverlay = false }: KanbanCardProps) {
           )}
         </div>
 
-        <div className="flex items-center gap-1 shrink-0">
+        <div className="shrink-0">
           <CardPriorityBadge priority={card.priority} showIconOnly />
-          {/* Dedicated Drag Handle for high precision */}
-          <div
-            {...attributes}
-            {...listeners}
-            onClick={(e) => e.stopPropagation()}
-            className="p-0.5 text-slate-300 dark:text-slate-600 hover:text-slate-600 dark:hover:text-slate-300 rounded cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity"
-            title="Drag card"
-          >
-            <GripVertical className="h-3.5 w-3.5" />
-          </div>
         </div>
       </div>
 
