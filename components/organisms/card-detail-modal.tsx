@@ -189,7 +189,7 @@ function CardDetailContent({ card, board }: CardDetailContentProps) {
   return (
     <>
       {/* Redesigned Header: Breadcrumb, Status, and Prominent Title */}
-      <DialogHeader className="space-y-3 pb-2 border-b border-slate-200/80 dark:border-slate-800/80">
+      <DialogHeader className="space-y-3 pt-2 pr-8 pb-3 border-b border-slate-200/80 dark:border-slate-800/80">
         <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
           <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
             <span className="font-semibold text-slate-700 dark:text-slate-300">
@@ -866,7 +866,7 @@ export function CardDetailModal() {
       open={Boolean(editingCardId)}
       onOpenChange={(open) => !open && setEditingCardId(null)}
     >
-      <DialogContent className="max-w-2xl sm:p-7 gap-5">
+      <DialogContent className="max-w-2xl p-6 sm:p-7 pt-7 sm:pt-8 gap-5">
         {card && board && <CardDetailContent key={card.id} card={card} board={board} />}
       </DialogContent>
     </Dialog>
