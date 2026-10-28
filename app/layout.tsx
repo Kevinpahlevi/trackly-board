@@ -16,6 +16,11 @@ export const metadata: Metadata = {
   title: "Trackly — Zero-Login Kanban Board",
   description:
     "A lightning-fast, zero-login Trello-like kanban board with multi-project support, drag-and-drop, and local persistence.",
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/icon.png",
+    apple: "/icon.png",
+  },
 };
 
 const themeInitScript = `

@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import {
-  Kanban,
   Plus,
   Settings,
   Download,
@@ -56,9 +56,16 @@ export function BoardHeader({
       <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-2.5 max-w-[1920px] mx-auto">
         <div className="flex items-center gap-3">
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-[10px] bg-indigo-600 flex items-center justify-center text-white shadow-xs">
-              <Kanban className="h-4 w-4" />
+          <div className="flex items-center gap-2.5">
+            <div className="h-8 w-8 rounded-[10px] overflow-hidden flex items-center justify-center shadow-xs shrink-0 ring-1 ring-slate-200/80 dark:ring-slate-800 bg-white dark:bg-slate-900">
+              <Image
+                src="/icon.png"
+                alt="Trackly Logo"
+                width={32}
+                height={32}
+                className="h-full w-full object-cover rounded-[10px]"
+                priority
+              />
             </div>
             <span className="font-bold text-base tracking-tight text-slate-900 dark:text-slate-100 hidden sm:inline">
               Trackly
