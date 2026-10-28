@@ -16,6 +16,8 @@ import {
   Send,
   Pipette,
   Palette,
+  Calendar,
+  Check,
 } from "lucide-react";
 import {
   Dialog,
@@ -81,6 +83,17 @@ function CardDetailContent({ card, board }: CardDetailContentProps) {
   const [commentText, setCommentText] = React.useState("");
   const [commentAuthor, setCommentAuthor] = React.useState("You");
 
+  // Due date state with explicit confirmation
+  const [isEditingDueDate, setIsEditingDueDate] = React.useState(false);
+  const [tempDate, setTempDate] = React.useState(
+    card.dueDate ? card.dueDate.split("T")[0] : new Date().toISOString().split("T")[0]
+  );
+  const [tempTime, setTempTime] = React.useState(
+    card.dueDate && card.dueDate.includes("T")
+      ? card.dueDate.split("T")[1].slice(0, 5)
+      : "18:00"
+  );
+
   const handleTitleBlur = () => {
     if (title.trim() && title !== card.title) {
       updateCard(card.id, { title: title.trim() });
@@ -99,9 +112,37 @@ function CardDetailContent({ card, board }: CardDetailContentProps) {
     updateCard(card.id, { priority });
   };
 
-  const handleDueDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value || undefined;
-    updateCard(card.id, { dueDate: val });
+  const handleConfirmDueDate = () => {
+    if (!tempDate) {
+      alert("Please select a date.");
+      return;
+    }
+    const combined = `${tempDate}T${tempTime || "18:00"}`;
+    updateCard(card.id, { dueDate: combined });
+    setIsEditingDueDate(false);
+  };
+
+  const handleRemoveDueDate = () => {
+    if (confirm("Remove due date from this card?")) {
+      updateCard(card.id, { dueDate: undefined });
+      setIsEditingDueDate(false);
+    }
+  };
+
+  const formatDisplayDueDate = (dateStr?: string) => {
+    if (!dateStr) return "";
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    const dateFormatted = d.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+    const hasTime = dateStr.includes("T");
+    const timeFormatted = hasTime
+      ? d.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false })
+      : "";
+    return hasTime ? `${dateFormatted} • ${timeFormatted}` : dateFormatted;
   };
 
   const handleAddSubtask = (e: React.FormEvent) => {
@@ -283,28 +324,142 @@ function CardDetailContent({ card, board }: CardDetailContentProps) {
                   <Clock className="h-3.5 w-3.5 text-indigo-500" />
                   <span>Due Date & Time</span>
                 </label>
-                {card.dueDate && (
-                  <button
-                    type="button"
-                    onClick={() => updateCard(card.id, { dueDate: undefined })}
-                    className="text-[11px] text-slate-400 hover:text-red-500 transition-colors cursor-pointer"
-                  >
-                    Clear
-                  </button>
-                )}
               </div>
-              <Input
-                type="datetime-local"
-                value={
-                  card.dueDate
-                    ? card.dueDate.includes("T")
-                      ? card.dueDate.slice(0, 16)
-                      : `${card.dueDate}T18:00`
-                    : ""
-                }
-                onChange={handleDueDateChange}
-                className="h-8 text-xs bg-white dark:bg-slate-900 w-full cursor-pointer rounded-[10px]"
-              />
+
+              {!isEditingDueDate ? (
+                <div className="flex flex-wrap items-center gap-2">
+                  {card.dueDate ? (
+                    <div className="flex items-center gap-2">
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[10px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-medium text-slate-800 dark:text-slate-200 shadow-xs">
+                        <Clock className="h-3.5 w-3.5 text-indigo-500 shrink-0" />
+                        <span className="truncate max-w-[190px]">
+                          {formatDisplayDueDate(card.dueDate)}
+                        </span>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="h-8 text-xs px-2.5 rounded-[10px]"
+                        onClick={() => {
+                          setTempDate(
+                            card.dueDate
+                              ? card.dueDate.split("T")[0]
+                              : new Date().toISOString().split("T")[0]
+                          );
+                          setTempTime(
+                            card.dueDate && card.dueDate.includes("T")
+                              ? card.dueDate.split("T")[1].slice(0, 5)
+                              : "18:00"
+                          );
+                          setIsEditingDueDate(true);
+                        }}
+                      >
+                        Change
+                      </Button>
+                      <button
+                        type="button"
+                        onClick={handleRemoveDueDate}
+                        className="text-xs text-slate-400 hover:text-red-500 px-1 cursor-pointer transition-colors"
+                        title="Remove due date"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ) : (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="gap-1.5 text-xs h-8 px-3 rounded-[10px]"
+                      onClick={() => {
+                        setTempDate(new Date().toISOString().split("T")[0]);
+                        setTempTime("18:00");
+                        setIsEditingDueDate(true);
+                      }}
+                    >
+                      <Calendar className="h-3.5 w-3.5 text-indigo-500" />
+                      <span>+ Set Due Date & Time</span>
+                    </Button>
+                  )}
+                </div>
+              ) : (
+                /* Compact Picker Form with Confirmation */
+                <div className="p-3 rounded-[10px] bg-white dark:bg-slate-900 border border-indigo-300 dark:border-indigo-700 shadow-sm space-y-2.5">
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1 min-w-0">
+                      <label className="text-[10px] font-semibold text-slate-400 block mb-1">
+                        Date
+                      </label>
+                      <Input
+                        type="date"
+                        value={tempDate}
+                        onChange={(e) => setTempDate(e.target.value)}
+                        className="h-7 text-xs rounded-[10px]"
+                      />
+                    </div>
+                    <div className="w-24 shrink-0">
+                      <label className="text-[10px] font-semibold text-slate-400 block mb-1">
+                        Time
+                      </label>
+                      <Input
+                        type="time"
+                        value={tempTime}
+                        onChange={(e) => setTempTime(e.target.value)}
+                        className="h-7 text-xs rounded-[10px]"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Quick Shortcuts */}
+                  <div className="flex items-center gap-1.5 text-[11px] pt-0.5">
+                    <span className="text-slate-400 text-[10px]">Preset:</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setTempDate(new Date().toISOString().split("T")[0]);
+                        setTempTime("18:00");
+                      }}
+                      className="px-1.5 py-0.5 rounded-[10px] bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 cursor-pointer text-[10px]"
+                    >
+                      Today 18:00
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const tmr = new Date(Date.now() + 86400000);
+                        setTempDate(tmr.toISOString().split("T")[0]);
+                        setTempTime("12:00");
+                      }}
+                      className="px-1.5 py-0.5 rounded-[10px] bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 cursor-pointer text-[10px]"
+                    >
+                      Tomorrow 12:00
+                    </button>
+                  </div>
+
+                  {/* Explicit Confirmation Action Bar */}
+                  <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="h-7 text-xs px-2.5 rounded-[10px]"
+                      onClick={() => setIsEditingDueDate(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      type="button"
+                      size="sm"
+                      className="h-7 text-xs px-3 rounded-[10px] gap-1 font-semibold"
+                      onClick={handleConfirmDueDate}
+                    >
+                      <Check className="h-3 w-3" />
+                      <span>Confirm & Save</span>
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Card Cover Color Selector */}
