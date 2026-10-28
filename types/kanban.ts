@@ -47,11 +47,18 @@ export interface KanbanColumnItem {
   cardIds: string[];
 }
 
+export interface BoardAppearance {
+  backgroundType: "pattern" | "gradient" | "image" | "solid";
+  backgroundValue: string;
+  blurIntensity: number; // 0 to 20 in px
+}
+
 export interface KanbanBoard {
   id: string;
   title: string;
   description?: string;
   accentColor?: string; // 'blue' | 'indigo' | 'emerald' | 'amber' | 'rose' | 'purple'
+  appearance?: BoardAppearance;
   createdAt: string;
   columns: KanbanColumnItem[];
   cards: Record<string, KanbanCardItem>;

@@ -7,6 +7,7 @@ import {
   KanbanWorkspace,
   PriorityLevel,
   CardTag,
+  BoardAppearance,
 } from "@/types/kanban";
 import { initialWorkspace } from "@/lib/initial-data";
 import { getCookie, setCookie } from "@/lib/storage";
@@ -28,6 +29,7 @@ interface KanbanState {
   setActiveBoardId: (id: string) => void;
   createBoard: (title: string, description?: string, accentColor?: string) => string;
   updateBoard: (boardId: string, updates: Partial<KanbanBoard>) => void;
+  updateBoardAppearance: (boardId: string, appearance: Partial<BoardAppearance>) => void;
   deleteBoard: (boardId: string) => void;
 
   // Column Actions
@@ -122,6 +124,27 @@ export const useKanbanStore = create<KanbanState>()(
             boards: {
               ...state.boards,
               [boardId]: { ...current, ...updates },
+            },
+          };
+        });
+      },
+
+      updateBoardAppearance: (boardId: string, appearanceUpdates: Partial<BoardAppearance>) => {
+        set((state) => {
+          const current = state.boards[boardId];
+          if (!current) return state;
+          const currentAppearance: BoardAppearance = current.appearance || {
+            backgroundType: "pattern",
+            backgroundValue: "grid",
+            blurIntensity: 8,
+          };
+          return {
+            boards: {
+              ...state.boards,
+              [boardId]: {
+                ...current,
+                appearance: { ...currentAppearance, ...appearanceUpdates },
+              },
             },
           };
         });

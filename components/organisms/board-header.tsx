@@ -6,6 +6,7 @@ import {
   Plus,
   Settings,
   Download,
+  Palette,
 } from "lucide-react";
 import { Button } from "@/components/atoms/button";
 import { ProjectSwitcher } from "@/components/molecules/project-switcher";
@@ -17,11 +18,13 @@ import { exportToJson } from "@/lib/storage";
 interface BoardHeaderProps {
   onOpenProjectModal: () => void;
   onOpenAddColumnModal: () => void;
+  onOpenAppearanceModal?: () => void;
 }
 
 export function BoardHeader({
   onOpenProjectModal,
   onOpenAddColumnModal,
+  onOpenAppearanceModal,
 }: BoardHeaderProps) {
   const { boards, activeBoardId, updateBoard } = useKanbanStore();
   const currentBoard = boards[activeBoardId] || Object.values(boards)[0];
@@ -87,6 +90,19 @@ export function BoardHeader({
             <span className="hidden md:inline">Add Column</span>
           </Button>
 
+          {/* Board Appearance Modal Trigger */}
+          {onOpenAppearanceModal && (
+            <Button
+              variant="outline"
+              size="icon-sm"
+              className="h-8 w-8 text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400"
+              onClick={onOpenAppearanceModal}
+              title="Customize Board Background & Blur"
+            >
+              <Palette className="h-3.5 w-3.5" />
+            </Button>
+          )}
+
           {/* Export Current Board */}
           <Button
             variant="outline"
@@ -145,6 +161,17 @@ export function BoardHeader({
           </div>
 
           <div className="flex items-center gap-3 text-slate-500 dark:text-slate-400">
+            {onOpenAppearanceModal && (
+              <button
+                type="button"
+                onClick={onOpenAppearanceModal}
+                className="flex items-center gap-1.5 px-2 py-0.5 rounded-[6px] bg-slate-200/60 dark:bg-slate-800/60 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors cursor-pointer"
+                title="Change board background & blur"
+              >
+                <Palette className="h-3 w-3 text-indigo-500" />
+                <span>Background & Blur</span>
+              </button>
+            )}
             <span>
               {currentBoard.columns.length} columns •{" "}
               {Object.keys(currentBoard.cards).length} cards

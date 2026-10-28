@@ -25,6 +25,11 @@ export function KanbanColumn({ column, cards, isOverlay = false }: KanbanColumnP
   const updateColumnTitle = useKanbanStore((state) => state.updateColumnTitle);
   const searchQuery = useKanbanStore((state) => state.searchQuery.toLowerCase());
   const selectedPriority = useKanbanStore((state) => state.selectedPriority);
+  const appearance = useKanbanStore((state) => {
+    const activeBoard = state.boards[state.activeBoardId] || Object.values(state.boards)[0];
+    return activeBoard?.appearance;
+  });
+  const blurPx = appearance?.blurIntensity ?? 10;
 
   const {
     attributes,
@@ -42,9 +47,11 @@ export function KanbanColumn({ column, cards, isOverlay = false }: KanbanColumnP
     disabled: isOverlay,
   });
 
-  const style = {
+  const style: React.CSSProperties = {
     transform: CSS.Translate.toString(transform),
     transition,
+    backdropFilter: blurPx > 0 ? `blur(${blurPx}px)` : "none",
+    WebkitBackdropFilter: blurPx > 0 ? `blur(${blurPx}px)` : "none",
   };
 
   // Filter cards in this column
@@ -94,7 +101,7 @@ export function KanbanColumn({ column, cards, isOverlay = false }: KanbanColumnP
       ref={setNodeRef}
       style={style}
       className={cn(
-        "flex flex-col w-72 sm:w-80 shrink-0 max-h-[calc(100vh-140px)] rounded-[10px] bg-slate-100/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800/80 shadow-xs",
+        "flex flex-col w-72 sm:w-80 shrink-0 max-h-[calc(100vh-140px)] rounded-[10px] bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800/80 shadow-xs",
         isDragging && "opacity-30 border-dashed border-indigo-400",
         isOverlay && "shadow-2xl ring-2 ring-indigo-500/20 rotate-1 bg-slate-100 dark:bg-slate-900 z-50 rounded-[10px]"
       )}
