@@ -18,7 +18,9 @@ import {
   Palette,
   Calendar,
   Check,
+  RotateCcw,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import {
   Dialog,
   DialogContent,
@@ -33,6 +35,13 @@ import { CardTagBadge } from "@/components/molecules/card-tag-badge";
 import { CardPriorityBadge } from "@/components/molecules/card-priority-badge";
 import { useKanbanStore } from "@/store/use-kanban-store";
 import { KanbanCardItem, KanbanBoard, PriorityLevel } from "@/types/kanban";
+
+const CARD_ACCENT_COLORS = [
+  { id: "blue", name: "Blue", hex: "#3b82f6" },
+  { id: "emerald", name: "Emerald", hex: "#10b981" },
+  { id: "amber", name: "Amber", hex: "#f59e0b" },
+  { id: "rose", name: "Rose", hex: "#f43f5e" },
+] as const;
 
 const presetTagColors = [
   { name: "Indigo", hex: "#6366f1" },
@@ -462,64 +471,86 @@ function CardDetailContent({ card, board }: CardDetailContentProps) {
               )}
             </div>
 
-            {/* Card Cover Color Selector */}
-            <div className="sm:col-span-2 pt-3 border-t border-slate-200/60 dark:border-slate-800/60">
-              <div className="flex items-center justify-between mb-2">
-                <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+            {/* Redesigned Card Accent Color Selector (4 curated colors + None) */}
+            <div className="sm:col-span-2 pt-3 border-t border-slate-200/60 dark:border-slate-800/60 space-y-2.5">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-semibold text-slate-600 dark:text-slate-300 flex items-center gap-1.5">
                   <Palette className="h-3.5 w-3.5 text-indigo-500" />
-                  <span>Card Color & Accent</span>
+                  <span>Card Color Accent</span>
                 </label>
                 {card.color && (
                   <button
                     type="button"
                     onClick={() => updateCard(card.id, { color: undefined })}
-                    className="text-[11px] text-slate-400 hover:text-red-500 transition-colors cursor-pointer"
+                    className="text-[11px] text-slate-400 hover:text-rose-500 transition-colors cursor-pointer flex items-center gap-1"
                   >
-                    Remove Color
+                    <RotateCcw className="h-3 w-3" />
+                    <span>Clear Color</span>
                   </button>
                 )}
               </div>
-              <div className="flex flex-wrap items-center gap-2">
+
+              <div className="grid grid-cols-5 gap-2">
+                {/* None / Default Option */}
                 <button
                   type="button"
                   onClick={() => updateCard(card.id, { color: undefined })}
-                  className={`h-6 px-2 text-[11px] font-medium rounded-[10px] border transition-all cursor-pointer ${
+                  className={cn(
+                    "flex flex-col items-center justify-center py-2 px-1 rounded-[10px] border transition-all cursor-pointer gap-1.5",
                     !card.color
-                      ? "border-indigo-500 bg-white dark:bg-slate-900 text-indigo-600 font-bold ring-2 ring-indigo-500/20"
-                      : "border-slate-300 dark:border-slate-700 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800"
-                  }`}
+                      ? "border-indigo-600 bg-indigo-50/50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 font-semibold ring-2 ring-indigo-500/20 shadow-2xs"
+                      : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50/40 dark:bg-slate-900/40 text-slate-500"
+                  )}
                 >
-                  Default
+                  <div className="h-5 w-5 rounded-full border border-dashed border-slate-300 dark:border-slate-600 flex items-center justify-center">
+                    {!card.color && <div className="h-2 w-2 rounded-full bg-indigo-600" />}
+                  </div>
+                  <span className="text-[11px]">None</span>
                 </button>
 
-                {presetTagColors.map((color) => (
-                  <button
-                    key={color.hex}
-                    type="button"
-                    onClick={() => updateCard(card.id, { color: color.hex })}
-                    title={color.name}
-                    className={`h-6 w-6 rounded-[10px] transition-all cursor-pointer ${
-                      card.color === color.hex
-                        ? "ring-2 ring-offset-2 ring-slate-900 dark:ring-white scale-110"
-                        : "opacity-85 hover:opacity-100"
-                    }`}
-                    style={{ backgroundColor: color.hex }}
-                  />
-                ))}
-
-                <label
-                  title="Pick custom card color"
-                  className="h-6 px-2 flex items-center gap-1 rounded-[10px] border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-[11px] font-medium text-slate-600 dark:text-slate-300 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800"
-                >
-                  <Pipette className="h-3 w-3" />
-                  <span>Custom</span>
-                  <input
-                    type="color"
-                    value={card.color || "#6366f1"}
-                    onChange={(e) => updateCard(card.id, { color: e.target.value })}
-                    className="opacity-0 w-0 h-0 absolute pointer-events-none"
-                  />
-                </label>
+                {/* 4 Curated Accent Colors */}
+                {CARD_ACCENT_COLORS.map((color) => {
+                  const isSelected = card.color === color.hex;
+                  return (
+                    <button
+                      key={color.id}
+                      type="button"
+                      onClick={() =>
+                        updateCard(card.id, {
+                          color: isSelected ? undefined : color.hex,
+                        })
+                      }
+                      className={cn(
+                        "flex flex-col items-center justify-center py-2 px-1 rounded-[10px] border transition-all cursor-pointer gap-1.5 relative group",
+                        isSelected
+                          ? "border-slate-900 dark:border-white ring-2 ring-offset-2 ring-slate-900 dark:ring-white dark:ring-offset-slate-900 shadow-2xs"
+                          : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50/30 dark:bg-slate-900/30 hover:scale-[1.02]"
+                      )}
+                      style={
+                        isSelected
+                          ? { backgroundColor: `${color.hex}15` }
+                          : undefined
+                      }
+                    >
+                      <div
+                        className="h-5 w-5 rounded-full shadow-xs flex items-center justify-center text-white transition-transform group-hover:scale-105"
+                        style={{ backgroundColor: color.hex }}
+                      >
+                        {isSelected && <Check className="h-3 w-3 stroke-[3]" />}
+                      </div>
+                      <span
+                        className={cn(
+                          "text-[11px]",
+                          isSelected
+                            ? "font-bold text-slate-900 dark:text-slate-100"
+                            : "font-medium text-slate-600 dark:text-slate-400"
+                        )}
+                      >
+                        {color.name}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -866,7 +897,13 @@ export function CardDetailModal() {
       open={Boolean(editingCardId)}
       onOpenChange={(open) => !open && setEditingCardId(null)}
     >
-      <DialogContent className="max-w-2xl p-6 sm:p-7 pt-7 sm:pt-8 gap-5">
+      <DialogContent className="max-w-2xl p-6 sm:p-7 pt-7 sm:pt-8 gap-5 overflow-hidden">
+        {card?.color && (
+          <div
+            className="h-1.5 w-full absolute top-0 left-0 right-0"
+            style={{ backgroundColor: card.color }}
+          />
+        )}
         {card && board && <CardDetailContent key={card.id} card={card} board={board} />}
       </DialogContent>
     </Dialog>
