@@ -13,7 +13,7 @@ import { ProjectSwitcher } from "@/components/molecules/project-switcher";
 import { ThemeToggle } from "@/components/molecules/theme-toggle";
 import { SearchFilterBar } from "@/components/molecules/search-filter-bar";
 import { useKanbanStore } from "@/store/use-kanban-store";
-import { exportToJson } from "@/lib/storage";
+import { exportToJson, generateBoardExportFileName } from "@/lib/storage";
 
 interface BoardHeaderProps {
   onOpenProjectModal: () => void;
@@ -46,10 +46,8 @@ export function BoardHeader({
 
   const handleExportCurrentBoard = () => {
     if (!currentBoard) return;
-    exportToJson(
-      currentBoard,
-      `${currentBoard.title.toLowerCase().replace(/[^a-z0-9]/g, "-")}-board.json`
-    );
+    const filename = generateBoardExportFileName(currentBoard.title);
+    exportToJson(currentBoard, filename);
   };
 
   return (

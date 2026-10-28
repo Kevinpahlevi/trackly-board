@@ -21,7 +21,13 @@ import { Button } from "@/components/atoms/button";
 import { Input } from "@/components/atoms/input";
 import { Textarea } from "@/components/atoms/textarea";
 import { useKanbanStore } from "@/store/use-kanban-store";
-import { exportToJson, validateWorkspace } from "@/lib/storage";
+import {
+  exportToJson,
+  validateWorkspace,
+  validateBoard,
+  generateBoardExportFileName,
+  generateWorkspaceExportFileName,
+} from "@/lib/storage";
 
 interface ProjectManagementModalProps {
   isOpen: boolean;
@@ -99,7 +105,7 @@ export function ProjectManagementModal({
   const handleExportWorkspace = () => {
     exportToJson(
       { activeBoardId, boards },
-      `trackly-workspace-${new Date().toISOString().split("T")[0]}.json`
+      generateWorkspaceExportFileName()
     );
   };
 
@@ -111,14 +117,36 @@ export function ProjectManagementModal({
     reader.onload = (event) => {
       try {
         const parsed = JSON.parse(event.target?.result as string);
-        const valid = validateWorkspace(parsed);
-        if (valid) {
-          importWorkspace(valid);
+        const validWorkspace = validateWorkspace(parsed);
+        if (validWorkspace) {
+          importWorkspace(validWorkspace);
           alert("Workspace successfully imported!");
           onClose();
-        } else {
-          alert("Invalid workspace format. Please provide a valid Trackly JSON file.");
+          return;
         }
+
+        const validBoard = validateBoard(parsed);
+        if (validBoard) {
+          const currentBoards = useKanbanStore.getState().boards;
+          const targetId = currentBoards[validBoard.id]
+            ? `board-${Date.now()}`
+            : validBoard.id;
+          const importedBoard = { ...validBoard, id: targetId };
+
+          useKanbanStore.setState((state) => ({
+            boards: {
+              ...state.boards,
+              [targetId]: importedBoard,
+            },
+            activeBoardId: targetId,
+          }));
+
+          alert(`Project "${validBoard.title}" successfully imported!`);
+          onClose();
+          return;
+        }
+
+        alert("Invalid format. Please provide a valid Trackly workspace or project JSON file.");
       } catch {
         alert("Failed to parse JSON file.");
       }
@@ -255,6 +283,20 @@ export function ProjectManagementModal({
                         title="Rename project"
                       >
                         <Edit2 className="h-3.5 w-3.5" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        className="h-7 w-7 text-slate-400 hover:text-indigo-600 rounded-[10px]"
+                        onClick={() =>
+                          exportToJson(
+                            board,
+                            generateBoardExportFileName(board.title)
+                          )
+                        }
+                        title="Export this project to JSON"
+                      >
+                        <Download className="h-3.5 w-3.5" />
                       </Button>
                       <Button
                         variant="ghost"
