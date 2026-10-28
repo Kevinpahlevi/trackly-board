@@ -82,6 +82,7 @@ export const initialWorkspace: KanbanWorkspace = {
             { id: "chk-3-3", text: "Add tilt animation and floating drag overlay", completed: false },
           ],
           dueDate: new Date(Date.now() + 2 * 86400000 + 3 * 3600000).toISOString().slice(0, 16),
+          color: "#6366f1",
           createdAt: new Date(Date.now() - 3 * 86400000).toISOString(),
         },
         "card-4": {
@@ -99,6 +100,7 @@ export const initialWorkspace: KanbanWorkspace = {
             { id: "chk-4-3", text: "Test theme persistence after browser refresh", completed: false },
           ],
           dueDate: new Date(Date.now() + 3 * 86400000 + 6 * 3600000).toISOString().slice(0, 16),
+          color: "#10b981",
           createdAt: new Date(Date.now() - 2 * 86400000).toISOString(),
         },
         "card-5": {

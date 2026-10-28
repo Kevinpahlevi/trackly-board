@@ -39,6 +39,12 @@ export function KanbanCard({ card, isOverlay = false }: KanbanCardProps) {
   const style = {
     transform: CSS.Translate.toString(transform),
     transition,
+    ...(card.color
+      ? {
+          borderColor: `${card.color}60`,
+          backgroundColor: `${card.color}0d`,
+        }
+      : {}),
   };
 
   const handleClick = () => {
@@ -53,12 +59,20 @@ export function KanbanCard({ card, isOverlay = false }: KanbanCardProps) {
       style={style}
       onClick={handleClick}
       className={cn(
-        "group relative flex flex-col gap-2 rounded-[10px] border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 p-3 shadow-xs hover:border-indigo-300 dark:hover:border-indigo-600/60 hover:shadow-md transition-all cursor-pointer select-none",
+        "group relative flex flex-col gap-2 rounded-[10px] border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 p-3 shadow-xs hover:border-indigo-300 dark:hover:border-indigo-600/60 hover:shadow-md transition-all cursor-pointer select-none overflow-hidden",
         isDragging && "opacity-30 border-dashed border-indigo-400 bg-indigo-50/20",
         isOverlay &&
           "shadow-2xl border-indigo-500 ring-2 ring-indigo-500/20 rotate-1 scale-[1.02] cursor-grabbing bg-white dark:bg-slate-900 z-50 rounded-[10px]"
       )}
     >
+      {/* Optional Top Color Cover Bar */}
+      {card.color && (
+        <div
+          className="h-2 -mx-3 -mt-3 mb-1"
+          style={{ backgroundColor: card.color }}
+        />
+      )}
+
       {/* Top Bar: Drag Handle + Tags + Priority */}
       <div className="flex items-center justify-between gap-1.5">
         <div className="flex flex-wrap items-center gap-1 overflow-hidden">

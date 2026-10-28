@@ -36,6 +36,7 @@ export interface KanbanCardItem {
   checklist: ChecklistItem[];
   dueDate?: string;
   createdAt: string;
+  color?: string; // Hex color code or preset name for card cover/tint
   comments?: CardComment[];
   history?: CardActivityLog[];
 }

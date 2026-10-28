@@ -327,6 +327,14 @@ export const useKanbanStore = create<KanbanState>()(
             });
           }
 
+          if ("color" in updates && updates.color !== currentCard.color) {
+            historyEntries.push({
+              id: `hist-${Date.now()}-c`,
+              action: updates.color ? "Changed card cover color" : "Removed card cover color",
+              timestamp: nowStr,
+            });
+          }
+
           if (updates.title && updates.title !== currentCard.title) {
             historyEntries.push({
               id: `hist-${Date.now()}-t`,
