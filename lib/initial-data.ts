@@ -1,0 +1,224 @@
+import { KanbanWorkspace } from "@/types/kanban";
+
+export const initialWorkspace: KanbanWorkspace = {
+  activeBoardId: "board-roadmap",
+  boards: {
+    "board-roadmap": {
+      id: "board-roadmap",
+      title: "🚀 Product Roadmap & Sprint",
+      description: "Development backlog and current sprint progress for Trackly platform.",
+      accentColor: "indigo",
+      createdAt: new Date(Date.now() - 7 * 86400000).toISOString(),
+      columns: [
+        {
+          id: "col-backlog",
+          title: "Backlog",
+          cardIds: ["card-1", "card-2"],
+        },
+        {
+          id: "col-progress",
+          title: "In Progress",
+          cardIds: ["card-3", "card-4"],
+        },
+        {
+          id: "col-review",
+          title: "In Review",
+          cardIds: ["card-5"],
+        },
+        {
+          id: "col-done",
+          title: "Done",
+          cardIds: ["card-6"],
+        },
+      ],
+      cards: {
+        "card-1": {
+          id: "card-1",
+          columnId: "col-backlog",
+          title: "OAuth 2.0 & Social Auth Integration",
+          description: "Implement Google and GitHub authentication provider support with fallback magic links.",
+          priority: "medium",
+          tags: [
+            { id: "tag-backend", label: "Backend", color: "blue" },
+            { id: "tag-security", label: "Security", color: "rose" },
+          ],
+          checklist: [
+            { id: "chk-1-1", text: "Configure Google Cloud Console OAuth App", completed: true },
+            { id: "chk-1-2", text: "Write token exchange middleware", completed: false },
+            { id: "chk-1-3", text: "Test session revocation and cookie expiration", completed: false },
+          ],
+          dueDate: new Date(Date.now() + 10 * 86400000 + 5 * 3600000).toISOString().slice(0, 16),
+          createdAt: new Date(Date.now() - 5 * 86400000).toISOString(),
+        },
+        "card-2": {
+          id: "card-2",
+          columnId: "col-backlog",
+          title: "Export to PDF & CSV Reports",
+          description: "Allow board owners to download structured project summaries for stakeholders.",
+          priority: "low",
+          tags: [
+            { id: "tag-feature", label: "Feature", color: "emerald" },
+          ],
+          checklist: [
+            { id: "chk-2-1", text: "Design PDF layout template", completed: false },
+            { id: "chk-2-2", text: "Benchmark CSV generator performance", completed: false },
+          ],
+          dueDate: new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 16),
+          createdAt: new Date(Date.now() - 4 * 86400000).toISOString(),
+        },
+        "card-3": {
+          id: "card-3",
+          columnId: "col-progress",
+          title: "Interactive Drag & Drop Mechanism",
+          description: "Smooth 60fps drag and drop across columns and reordering using @dnd-kit sensors.",
+          priority: "urgent",
+          tags: [
+            { id: "tag-frontend", label: "Frontend", color: "purple" },
+            { id: "tag-core", label: "Core", color: "amber" },
+          ],
+          checklist: [
+            { id: "chk-3-1", text: "Install @dnd-kit/core & @dnd-kit/sortable", completed: true },
+            { id: "chk-3-2", text: "Configure collision detection & activation sensors", completed: true },
+            { id: "chk-3-3", text: "Add tilt animation and floating drag overlay", completed: false },
+          ],
+          dueDate: new Date(Date.now() + 2 * 86400000 + 3 * 3600000).toISOString().slice(0, 16),
+          createdAt: new Date(Date.now() - 3 * 86400000).toISOString(),
+        },
+        "card-4": {
+          id: "card-4",
+          columnId: "col-progress",
+          title: "Dark Mode & Theme Switcher",
+          description: "Provide system, light, and dark mode with zero FOUC using cookie synchronization.",
+          priority: "high",
+          tags: [
+            { id: "tag-ui", label: "UI / UX", color: "indigo" },
+          ],
+          checklist: [
+            { id: "chk-4-1", text: "Setup dark mode CSS variables in globals.css", completed: true },
+            { id: "chk-4-2", text: "Create theme toggle dropdown with sun/moon icons", completed: true },
+            { id: "chk-4-3", text: "Test theme persistence after browser refresh", completed: false },
+          ],
+          dueDate: new Date(Date.now() + 3 * 86400000 + 6 * 3600000).toISOString().slice(0, 16),
+          createdAt: new Date(Date.now() - 2 * 86400000).toISOString(),
+        },
+        "card-5": {
+          id: "card-5",
+          columnId: "col-review",
+          title: "Atomic Design Architecture Audit",
+          description: "Verify that atoms, molecules, organisms, and templates adhere to strict single-responsibility boundaries.",
+          priority: "medium",
+          tags: [
+            { id: "tag-refactor", label: "Architecture", color: "emerald" },
+          ],
+          checklist: [
+            { id: "chk-5-1", text: "Audit component separation in components/ folder", completed: true },
+            { id: "chk-5-2", text: "Extract reusable modal primitives", completed: true },
+            { id: "chk-5-3", text: "Verify TypeScript strict typing", completed: true },
+          ],
+          dueDate: new Date(Date.now() + 1 * 86400000).toISOString().split("T")[0],
+          createdAt: new Date(Date.now() - 6 * 86400000).toISOString(),
+        },
+        "card-6": {
+          id: "card-6",
+          columnId: "col-done",
+          title: "Zustand 5 Global Store Setup",
+          description: "Integrated Zustand state management with localStorage persist middleware and reactive selectors.",
+          priority: "urgent",
+          tags: [
+            { id: "tag-frontend", label: "Frontend", color: "purple" },
+            { id: "tag-core", label: "Core", color: "amber" },
+          ],
+          checklist: [
+            { id: "chk-6-1", text: "Define TypeScript models in types/kanban.ts", completed: true },
+            { id: "chk-6-2", text: "Configure persist middleware & cookie hydration", completed: true },
+            { id: "chk-6-3", text: "Implement column & card action handlers", completed: true },
+          ],
+          dueDate: new Date(Date.now() - 1 * 86400000).toISOString().split("T")[0],
+          createdAt: new Date(Date.now() - 7 * 86400000).toISOString(),
+        },
+      },
+    },
+    "board-personal": {
+      id: "board-personal",
+      title: "🎯 Personal Growth & Habits",
+      description: "Weekly focus, health habits, and book reading milestones.",
+      accentColor: "emerald",
+      createdAt: new Date(Date.now() - 3 * 86400000).toISOString(),
+      columns: [
+        {
+          id: "col-habit-todo",
+          title: "This Week",
+          cardIds: ["card-p1", "card-p2"],
+        },
+        {
+          id: "col-habit-progress",
+          title: "In Progress",
+          cardIds: ["card-p3"],
+        },
+        {
+          id: "col-habit-done",
+          title: "Completed",
+          cardIds: ["card-p4"],
+        },
+      ],
+      cards: {
+        "card-p1": {
+          id: "card-p1",
+          columnId: "col-habit-todo",
+          title: "Read 'Designing Data-Intensive Applications'",
+          description: "Finish chapters 5 & 6 covering replication and consensus algorithms.",
+          priority: "high",
+          tags: [{ id: "tag-reading", label: "Learning", color: "blue" }],
+          checklist: [
+            { id: "chk-p1-1", text: "Chapter 5: Leaders & Followers", completed: false },
+            { id: "chk-p1-2", text: "Chapter 6: Partitioning Strategies", completed: false },
+          ],
+          dueDate: new Date(Date.now() + 5 * 86400000).toISOString().split("T")[0],
+          createdAt: new Date(Date.now() - 2 * 86400000).toISOString(),
+        },
+        "card-p2": {
+          id: "card-p2",
+          columnId: "col-habit-todo",
+          title: "Run 5K at the park",
+          description: "Morning jog to build stamina before the weekend.",
+          priority: "medium",
+          tags: [{ id: "tag-health", label: "Fitness", color: "emerald" }],
+          checklist: [
+            { id: "chk-p2-1", text: "Warm up & dynamic stretch", completed: false },
+            { id: "chk-p2-2", text: "5 kilometer pace run", completed: false },
+          ],
+          dueDate: new Date(Date.now() + 1 * 86400000).toISOString().split("T")[0],
+          createdAt: new Date(Date.now() - 1 * 86400000).toISOString(),
+        },
+        "card-p3": {
+          id: "card-p3",
+          columnId: "col-habit-progress",
+          title: "Learn Rust Memory Model",
+          description: "Understanding ownership, lifetimes, and smart pointers in Rust.",
+          priority: "high",
+          tags: [{ id: "tag-code", label: "Coding", color: "purple" }],
+          checklist: [
+            { id: "chk-p3-1", text: "Study Stack vs Heap allocation", completed: true },
+            { id: "chk-p3-2", text: "Implement Rc<RefCell<T>> graph example", completed: false },
+          ],
+          dueDate: new Date(Date.now() + 4 * 86400000).toISOString().split("T")[0],
+          createdAt: new Date(Date.now() - 3 * 86400000).toISOString(),
+        },
+        "card-p4": {
+          id: "card-p4",
+          columnId: "col-habit-done",
+          title: "Plan Q4 personal finance budget",
+          description: "Allocated savings into emergency fund and long-term index investments.",
+          priority: "low",
+          tags: [{ id: "tag-finance", label: "Finance", color: "amber" }],
+          checklist: [
+            { id: "chk-p4-1", text: "Review monthly recurring subscriptions", completed: true },
+            { id: "chk-p4-2", text: "Allocate automated transfer to investment account", completed: true },
+          ],
+          dueDate: new Date(Date.now() - 2 * 86400000).toISOString().split("T")[0],
+          createdAt: new Date(Date.now() - 5 * 86400000).toISOString(),
+        },
+      },
+    },
+  },
+};
